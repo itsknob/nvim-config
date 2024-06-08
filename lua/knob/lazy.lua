@@ -1,6 +1,9 @@
 return {
-  'theprimeagen/harpoon',
-
+  {
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+  },
   -- java debuggery
   { 'mfussenegger/nvim-jdtls' },
 

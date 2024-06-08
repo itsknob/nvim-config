@@ -30,7 +30,16 @@ local path = {}
 path.data_dir = vim.fn.stdpath 'cache' .. '/nvim-jdtls'
 path.java_agent = jdtls_install .. '/lombok.jar'
 path.launcher_jar = vim.fn.glob(jdtls_install .. '/plugins/org.eclipse.equinox.launcher_*.jar')
-path.platform_config = jdtls_install .. '/config_mac' -- Mac Specific
+
+-- Platform specific path
+if vim.fn.has 'mac' then
+  path.platform_config = jdtls_install .. '/config_mac' -- Mac Specific
+elseif vim.fn.has 'win32' then
+  path.platform_config = jdtls_install .. '/config_win'
+else
+  path.platform_config = jdtls_install .. '/config_linux'
+end
+
 path.jdk_homes = '/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home'
 
 path.bundles = {}
