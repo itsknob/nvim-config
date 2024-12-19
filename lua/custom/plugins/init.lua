@@ -3,5 +3,5 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  'theHamsta/nvim-dap-virtual-text',
+  -- 'theHamsta/nvim-dap-virtual-text',
 }
