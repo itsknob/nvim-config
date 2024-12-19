@@ -48,3 +48,6 @@ vim.opt.updatetime = 50 -- fast update time
 
 -- max line length column
 vim.opt.colorcolumn = '80'
+
+-- speed up vim-tmux-navigator
+vim.o.shell="/bin/bash -i"

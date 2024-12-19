@@ -1,3 +1,2 @@
-require('knob.keymap')
-require('knob.set')
-
+require 'knob.set'
+require 'knob.keymap'
