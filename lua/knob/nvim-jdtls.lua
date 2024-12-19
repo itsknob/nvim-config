@@ -1,41 +1,6 @@
-function table.val_to_str ( v )
-  if "string" == type( v ) then
-    v = string.gsub( v, "\n", "\\n" )
-    if string.match( string.gsub(v,"[^'\"]",""), '^"+$' ) then
-      return "'" .. v .. "'"
-    end
-    return '"' .. string.gsub(v,'"', '\\"' ) .. '"'
-  else
-    return "table" == type( v ) and table.tostring( v ) or
-      tostring( v )
-  end
-end
-
-function table.key_to_str ( k )
-  if "string" == type( k ) and string.match( k, "^[_%a][_%a%d]*$" ) then
-    return k
-  else
-    return "[" .. table.val_to_str( k ) .. "]"
-  end
-end
-
-function table.tostring( tbl )
-  local result, done = {}, {}
-    print("#{}", tbl)
-  for k, v in ipairs( tbl ) do
-    table.insert( result, table.val_to_str( v ) )
-    done[ k ] = true
-  end
-  for k, v in pairs( tbl ) do
-    if not done[ k ] then
-      table.insert( result,
-        table.key_to_str( k ) .. "=" .. table.val_to_str( v ) )
-    end
-  end
-  return "{" .. table.concat( result, "," ) .. "}"
-end
-
-
+---------
+--- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/guides/setup-with-nvim-jdtls.md
+---------
 local java_cmds = vim.api.nvim_create_augroup('java_cmds', { clear = true })
 local cache_vars = {}
 
@@ -62,38 +27,15 @@ local function get_jdtls_paths()
     end
 
     local path = {}
-
-    -------------------
-    --- Data Directory
-    -------------------
     path.data_dir = vim.fn.stdpath('cache') .. '/nvim-jdtls'
-    print("Adding data_dir: {}", data_dir)
-    print("isdirectory: ", vim.fn.isdirectory(data_dir))
-    print('data_dir ', (vim.fn.isdirectory(data_dir) ~= 1 and 'exists' or 'does not exist'))
 
     local jdtls_install = require('mason-registry')
         .get_package('jdtls')
         :get_install_path()
 
-    ------------------------
-    --- Java Agent - Lombok
-    ------------------------
     path.java_agent = jdtls_install .. '/lombok.jar'
-    print('java_agent is ', (vim.fn.filereadable(java_agent) ~= 0 and 'readable' or 'not readable'))
-    print('java_agent == nil', path.java_agent == nil)
-
-    ---------------------------
-    --- Launcher Jar - equinox
-    ---------------------------
     path.launcher_jar = vim.fn.glob(jdtls_install .. '/plugins/org.eclipse.equinox.launcher_*.jar')
-    print('launcher_jar == nil', path.launcher_jar == nil)
-    -- print(table.tostring(launcher_jar))
-    print('launcher_jar is ', (vim.fn.filereadable(launcher_jar) ~= 0 and 'readable' or 'not readable'))
-    -- print("launcher_jar files: ", unpack(path.launcher_jar))
 
-    --------------------
-    --- Platform Config
-    --------------------
     if vim.fn.has('mac') == 1 then
         path.platform_config = jdtls_install .. '/config_mac'
     elseif vim.fn.has('unix') == 1 then
@@ -101,14 +43,9 @@ local function get_jdtls_paths()
     elseif vim.fn.has('win32') == 1 then
         path.platform_config = jdtls_install .. '/config_win'
     end
-    print('platform_config is ', (vim.fn.isdirectory(platform_config) ~= 0 and 'exists' or 'does not exist'))
-
 
     path.bundles = {}
 
-    --------------
-    --- Java-Test
-    --------------
     -- Include Java-Test Bundle ifits present
     local java_test_path = require('mason-registry')
         .get_package('java-test')
@@ -120,17 +57,7 @@ local function get_jdtls_paths()
     if java_test_bundle[1] ~= '' then
         vim.list_extend(path.bundles, java_test_bundle)
     end
-    print("Adding java_test bundle")
-    for i = #java_test_bundle, 1, -1
-    do
-        if vim.fn.filereadable(java_test_bundle[i]) ~= 1 then
-            print("@@Unreadable {}", java_test_bundle[i])
-        end
-    end
 
-    ---------------
-    --- Java-Debug
-    ---------------
     -- Include java-debug-adapter ifits present
     local java_debug_path = require('mason-registry')
         .get_package('java-debug-adapter')
@@ -143,40 +70,6 @@ local function get_jdtls_paths()
         vim.list_extend(path.bundles, java_debug_bundle)
     end
 
-    print("Adding java_debug bundle")
-    for i = #java_debug_bundle, 1, -1
-    do
-        if vim.fn.filereadable(java_debug_bundle[i]) ~= 1 then
-            print("@@Unreadable {}", java_debug_bundle[i])
-        end
-    end
-
-    ----------------
-    --- VSCode-Test
-    ----------------
-    -- Include vscode-java-test ifits present
-    -- not in mason, don't use 
-    local vscode_java_test_bundle = vim.split(
-        vim.fn.glob("~/.config/nvim/vscode-java-test/server/*.jar"),
-        '\n'
-    )
-
-    print("Adding vscode-java-test bundle")
-    for i = #vscode_java_test_bundle, 1, -1
-    do
-        if vim.fn.filereadable(vscode_java_test_bundle[i]) ~= 1 then
-            print("@@Unreadable {}", vscode_java_test_bundle[i])
-        end
-    end
-    
-    if vscode_java_test_bundle[1] ~= '' then
-        vim.list_extend(path.bundles, vscode_java_test_bundle)
-    end
-
-    
-    -------------
-    --- Runtimes
-    -------------
     path.runtimes = {
       {
         name = 'JavaSE-1.8',
@@ -201,9 +94,6 @@ local function get_jdtls_paths()
     return path
 end
 
--------------
---- Features
--------------
 local function enable_codelens(bufnr)
     pcall(vim.lsp.codelens.refresh)
 
@@ -226,10 +116,6 @@ local function enable_debugger(bufnr)
     vim.keymap.set('n', '<leader>tm', "<cmd>lua require('jdtls').test_nearest_method()()<cr>", opts)
 end
 
-
-----------------
---- JDTLS Setup
-----------------
 local function jdtls_on_attach(client, bufnr)
     -- Executed when jdtls attaches to file
     -- Add Keybindings here
@@ -265,7 +151,7 @@ local function jdtls_setup(event)
     end
 
     local cmd = {
-        jdk_17_home .. '/java',
+        jdk_17_home,
         "-Declipse.application=org.eclipse.jdt.ls.core.id1",
         "-Dosgi.bundles.defaultStartLevel=4",
         "-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -349,14 +235,9 @@ local function jdtls_setup(event)
     })
 end
 
------------------
---- DO THE THING
------------------
-jdtls_setup()
-
--- vim.api.nvim_create_autocmd('FileType', {
---     group = java_cmds,
---     pattern = {'java'},
---     desc = 'Setup jdtls',
---     callback = jdtls_setup,
--- })
+vim.api.nvim_create_autocmd('FileType', {
+    group = java_cmds,
+    pattern = {'java'},
+    desc = 'Setup jdtls',
+    callback = jdtls_setup,
+})
