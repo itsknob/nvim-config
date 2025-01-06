@@ -37,7 +37,7 @@ vim.o.inccommand = 'split'
 -- nice colors
 vim.opt.termguicolors = true
 
--- don't scoll to the edge
+-- don't scroll to the edge
 vim.opt.scrolloff = 8
 
 -- always show column for symbols
@@ -51,3 +51,6 @@ vim.opt.colorcolumn = '80'
 
 -- speed up vim-tmux-navigator
 vim.o.shell="/bin/bash -i"
+
+-- Conflicts with Previous Diagnostic <M-p>
+vim.g.AutoPairsShortcutToggle = false
