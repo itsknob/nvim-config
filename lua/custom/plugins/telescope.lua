@@ -71,6 +71,7 @@ return { -- Fuzzy Finder (files, lsp, etc)
     }
 
     local builtin = require 'telescope.builtin'
+    local action_state = require('telescope.actions.state')
     local actions = require 'telescope.actions'
 
     -- Enable Telescope extensions if they are installed
@@ -86,11 +87,30 @@ return { -- Fuzzy Finder (files, lsp, etc)
     vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
     vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
     vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-    vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+    -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
     vim.keymap.set('n', '<C-p>', builtin.git_files, { desc = 'Open Git Files' })
-    vim.keymap.set('n', '<M-d>', function()
-      actions.delete_buffer(builtin.buffers)
-    end, { desc = 'Delete Buffer' })
+    -- vim.keymap.set({'n', 'v'}, '<M-d>', actions.delete_buffer, { desc = 'Delete Buffer' })
+    vim.keymap.set('n', '<leader><leader>', function()
+        builtin.buffers({
+            initial_mode = "normal",
+            attach_mappings = function(prompt_bufnr, map)
+                local delete_buf = function()
+                    local current_picker = action_state.get_current_picker(prompt_bufnr)
+                    current_picker:delete_selection(function(selection)
+                        vim.api.nvim_buf_delete(selection.bufnr, { force = true })
+                    end)
+                end
+
+                map('n', '<M-d>', delete_buf)
+
+                return true
+            end
+        }, {
+            sort_lastused = true,
+            sort_mru = true,
+            theme = "dropdown"
+        })
+    end, { desc = '[ ] Find existing buffers' })
 
     -- Slightly advanced example of overriding default behavior and theme
     vim.keymap.set('n', '<leader>/', function()
