@@ -13,7 +13,6 @@ function addAndRedraw()
   vim.cmd 'redrawt'
 end
 
-
 vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = '[A]dd file to harpoon' })
 vim.keymap.set('n', '<leader>h', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = '[A]dd file to harpoon' })
 vim.keymap.set('n', '<M-j>', function() harpoon:list():prev() end, { desc = '[P]revious harpoon file' })
