@@ -1,4 +1,5 @@
-require 'knob'
+-- Load Keymaps, Settings, Options, etc.
+require 'defaults'
 
 -----------------
 -- Lazy - Init --
@@ -16,6 +17,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Load Plugins for Lazy
 local opts = {}
-local plugins = require 'knob.lazy'
+local plugins = require 'custom.lazy'
 require('lazy').setup(plugins, opts)

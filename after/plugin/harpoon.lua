@@ -1,6 +1,6 @@
 local harpoon = require 'harpoon'
 local harpoontabline = require 'harpoon-tabline'
-local m = harpoon.mark
+-- local m = harpoon.mark
 local ui = harpoon.ui
 
 -- REQUIRED --
@@ -8,13 +8,13 @@ harpoon:setup()
 harpoontabline.setup()
 -- REQUIRED --
 
-function addAndRedraw()
-  m.add_file()
-  vim.cmd 'redrawt'
-end
+-- local function addAndRedraw()
+--   m.add_file()
+--   vim.cmd 'redrawt'
+-- end
 
 vim.keymap.set('n', '<leader>a', function() harpoon:list():add() end, { desc = '[A]dd file to harpoon' })
-vim.keymap.set('n', '<leader>h', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = '[A]dd file to harpoon' })
+vim.keymap.set('n', '<leader>h', function() ui:toggle_quick_menu(harpoon:list()) end, { desc = '[A]dd file to harpoon' })
 vim.keymap.set('n', '<M-j>', function() harpoon:list():prev() end, { desc = '[P]revious harpoon file' })
 vim.keymap.set('n', '<M-k>', function() harpoon:list():next() end, { desc = '[N]ext harpoon file' })
 

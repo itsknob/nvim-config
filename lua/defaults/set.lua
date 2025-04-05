@@ -15,6 +15,10 @@ vim.opt.relativenumber = true
 vim.opt.wrap = false
 vim.o.breakindent = true
 
+-- Splits Behavior
+vim.o.splitbelow = true
+vim.o.splitright = true
+
 -- backups
 vim.opt.swapfile = false
 vim.opt.backup = false
@@ -50,7 +54,7 @@ vim.opt.updatetime = 50 -- fast update time
 vim.opt.colorcolumn = '80'
 
 -- speed up vim-tmux-navigator
-vim.o.shell="/bin/bash -i"
+vim.o.shell = '/bin/bash -i'
 
 -- Conflicts with Previous Diagnostic <M-p>
 vim.g.AutoPairsShortcutToggle = false

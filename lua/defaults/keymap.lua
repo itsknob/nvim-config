@@ -14,11 +14,13 @@ vim.keymap.set('n', '<M-p>', ':cp<cr>', { desc = '[P]revious item in quicklist' 
 
 -- Centered Cursor Movement
 vim.keymap.set({ 'n', 'v' }, '<leader>d', [["_d]], { desc = 'Delete to void register' }) -- waits for motion
+vim.keymap.set({ 'n', 'v' }, '<leader>y', [["+y]], { desc = '[Y]ank to system clipboard' }) -- waits for motion
 vim.keymap.set('n', 'J', 'mzJ`z', { desc = "Don't go to end of first line when Joining" })
 vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = "Don't go to end of first line when Joining" })
 vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = "Don't go to end of first line when Joining" })
 vim.keymap.set('n', 'n', 'nzzzv', { desc = 'Center Screen when Searching' })
 vim.keymap.set('n', 'N', 'Nzzzv', { desc = 'Center Screen when Searching Reverse' })
+vim.keymap.set('n', 'zF', '$zf%', { desc = 'Create [F]old' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -30,8 +32,24 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 vim.keymap.set('n', '<C-`>', ':buf term<CR>', { desc = 'Switch to buffer that starts with "term"' })
 
 -- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
+-- Use CTRL+<hjkl> to switch between windows
+
+-- Visual --
+-- Bubble Line Up and Down
+vim.keymap.set('v', '<C-J>', ':m .+1<CR>==', { desc = 'Bubble Line Up' })
+vim.keymap.set('v', '<C-K>', ':m .-2<CR>==', { desc = 'Bubble Line Down' })
+
+-- Visual Block --
+-- Move text up and down
+vim.keymap.set('x', 'J', ":move '>+1<CR>gv-gv", { desc = 'Bubble Line Up' })
+vim.keymap.set('x', 'K', ":move '<-2<CR>gv-gv", { desc = 'Bubble Line Down' })
+vim.keymap.set('x', '<C-J>', ":move '>+1<CR>gv-gv", { desc = 'Bubble Line Up' })
+vim.keymap.set('x', '<C-K>', ":move '<-2<CR>gv-gv", { desc = 'Bubble Line down' })
+
+-- Don't lose previous selection when pasting
+vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste keeping yank' })
+vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = 'Paste from System Clipboard' })
+
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
