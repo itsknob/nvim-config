@@ -37,6 +37,8 @@ vim.opt.undofile = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.o.inccommand = 'split'
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 -- nice colors
 vim.opt.termguicolors = true
