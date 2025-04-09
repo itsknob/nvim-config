@@ -46,9 +46,12 @@ vim.keymap.set('x', 'K', ":move '<-2<CR>gv-gv", { desc = 'Bubble Line Down' })
 vim.keymap.set('x', '<C-J>', ":move '>+1<CR>gv-gv", { desc = 'Bubble Line Up' })
 vim.keymap.set('x', '<C-K>', ":move '<-2<CR>gv-gv", { desc = 'Bubble Line down' })
 
+-- Copy and Paste
 -- Don't lose previous selection when pasting
 vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste keeping yank' })
+-- System Clipboard
 vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = 'Paste from System Clipboard' })
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y', { desc = 'Copy to System Clipboard' })
 
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
